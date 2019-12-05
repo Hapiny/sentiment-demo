@@ -1,0 +1,24 @@
+body {
+  /* margin: 0; */
+  /* font-family: 'Manjari', sans-serif; */
+  font-family: 'Lato', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.nav-text {
+  /* text-decoration: underline; */
+  /* text-transform: uppercase; */
+  font-weight: bold;
+  font-size: 35px;
+  color: rgb(63, 62, 62);
+}
+
+#logo {
+  height: 5rem;
+  width: 5rem;
+}
+
+#custom-input {
+  max-width: 60%;
+}
