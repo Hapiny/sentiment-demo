@@ -7,27 +7,18 @@ export default class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mode: "custom",
+            
         }
     }
 
 
     render() {
         return ([
-            <Navbar 
+            <Navbar
                 key="navbar" 
-                // handler={
-                //     (newMode) => {
-                //         this.setState(
-                //             { mode: newMode }, 
-                //             () => console.log(this.state)
-                //         )
-                //     }
-                // }
             />,
             <Landing 
                 key="landing"
-                appMode={this.state.mode}
             />
         ]);    
     }

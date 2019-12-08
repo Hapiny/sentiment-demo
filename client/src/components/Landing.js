@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import CustomInput from "./CustomInput";
+import TablePage from "./SentimentResultTable";
 
 export default class Landing extends Component {
     constructor(props) {
@@ -13,23 +14,20 @@ export default class Landing extends Component {
     render() {
         return (
             <div>
-                <p className="lead my-5 text-center">
+                <h2 className=" mt-5 text-center">
                     You can run your models on custom sentence.
-                </p>
-                {
-                    this.props.appMode === "custom" ?
-                        <CustomInput
-                            onInput={
-                                (input) => {
-                                    this.setState(
-                                        { modelInputs: [input] },
-                                        () => console.log(this.state)
-                                    );
-                                }
-                            }
-                        /> : 
-                        null
-                }
+                </h2>
+                <CustomInput
+                    onInput={
+                        (input) => {
+                            this.setState(
+                                { modelInputs: [input] },
+                                () => console.log(this.state)
+                            );
+                        }
+                    }
+                />
+                <TablePage />
             </div>
         );
     }

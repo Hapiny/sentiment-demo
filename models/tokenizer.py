@@ -1,13 +1,10 @@
 import spacy
 import os
-import string
-import pandas as pd
 
 from typing import List, Union, Tuple, Dict
 from collections import defaultdict
 from tqdm import tqdm
-from models.utils import TRAIN_TEXTS, STOPWORDS_PATH, \
-    PUNCTUATION, SENTIMENT_DICT_PATH, load_sentiment_data
+from models.utils import TRAIN_TEXTS, load_sentiment_data
 
 
 class Tokenizer(object):
@@ -26,10 +23,15 @@ class Tokenizer(object):
     def tokenize(
         self, 
         sentences: List[str], 
-        return_lemmas: bool = False
-    ) -> Union[List[str], Tuple[List[str], List[str]]]:
+        return_lemmas: bool = False,
+        batch_size: int = 500
+    ) -> Union[List[List[str]], Tuple[List[List[str]], List[List[str]]]]:
         tokens, lemmas = [], []
-        for doc in tqdm(self.nlp.pipe(sentences, batch_size=500)):
+        text_processor = self.nlp.pipe(sentences,
+                                       batch_size=batch_size,
+                                       n_threads=4,
+                                       disable=['ner', 'parser', 'tagger'])
+        for doc in tqdm(text_processor, total=len(sentences)):
             tokens.append([token.text for token in doc])
             lemmas.append([token.lemma_ for token in doc])
         if return_lemmas:
@@ -48,10 +50,10 @@ class Tokenizer(object):
         def process_batch(batch, _token2freq):
             batch_of_tokens = self.tokenize(batch)
             for tokens in batch_of_tokens:
-                for token in tokens:
-                    if stopwords and token in stopwords:
+                for _token in tokens:
+                    if stopwords and _token in stopwords:
                         continue
-                    _token2freq[token] += 1
+                    _token2freq[_token] += 1
 
         token2freq = defaultdict(int)
         number_of_documents = 0
@@ -88,7 +90,7 @@ class Tokenizer(object):
         word2id = dict()
         if not _load_sentiment_vocab:
             if not os.path.exists(self.vocab_path):
-                # Create vocab from train texts if it doens't exist
+                # Create vocab from train texts if it doesn't exist
                 word2id = self.create_vocab(TRAIN_TEXTS, self.vocab_path)
             else:
                 # Otherwise read it and create word2id

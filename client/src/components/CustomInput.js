@@ -34,7 +34,7 @@ export default class CustomInput extends Component {
 
     render() {
         return (
-            <MDBContainer id="custom-input">
+            <MDBContainer id="custom-input" className="mb-5">
                 <MDBInput
                     label="Input your sentence"
                     outline

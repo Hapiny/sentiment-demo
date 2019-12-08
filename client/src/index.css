@@ -22,3 +22,16 @@ body {
 #custom-input {
   max-width: 60%;
 }
+
+#navbar {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+#result-table {
+  max-width: 80%;
+}
+
+#table-card {
+  margin-top: -1.5%;
+}
