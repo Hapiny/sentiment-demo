@@ -1,5 +1,7 @@
 from pathlib import Path
+from typing import List, Callable
 import string
+from concurrent.futures import ThreadPoolExecutor
 
 import pandas as pd
 
@@ -24,3 +26,17 @@ def load_sentiment_data() -> pd.DataFrame:
     sentiment_data = pd.read_csv(SENTIMENT_DICT_PATH, sep="\t", names=["word", "label", "value"])
     sentiment_data = sentiment_data.dropna()
     return sentiment_data
+
+
+def parallel_requests(num_threads: int, task: Callable, args: List):
+    response = []
+    with ThreadPoolExecutor(max_workers=num_threads) as pool:
+        response_iterator = pool.map(task, args)
+        for res, model in zip(response_iterator, args):
+            res_json = []
+            try:
+                res_json = res.json()
+            except:
+                print(f"Model {model} failed!")
+            response.append(res_json)
+    return response

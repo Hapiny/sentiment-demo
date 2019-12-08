@@ -4,9 +4,10 @@ from pathlib import Path
 from sklearn.metrics import accuracy_score
 from datetime import datetime
 import pandas as pd
+import pickle
 
 from models.tokenizer import Tokenizer
-from models.utils import TRAIN_TEXTS, DEV_TEXTS, TEST_TEXTS, \
+from models.utils import TRAIN_TEXTS, DEV_TEXTS, \
     load_sentiment_data, TRAIN_LABELS, DEV_LABELS
 
 PROJECT_PATH = Path(__file__).parent.parent
@@ -74,9 +75,9 @@ class BaseModel(object):
     def evaluate(
         self, 
         dataset_part: str,
-        save_predictions: bool = False
+        save_predictions: bool = False,
+        save_model: bool = False
     ):
-        sentences_path = None
         if dataset_part == "train":
             sentences_path = TRAIN_TEXTS
             gold_labels_path = TRAIN_LABELS
@@ -91,15 +92,24 @@ class BaseModel(object):
         with open(gold_labels_path, "r") as fp:
             gold_labels = [line.strip() for line in fp.readlines() if line.strip()]
         predicted_labels = [pred["label"] for pred in predicted]
+        model_name = f"{self.__class__.__name__}_{datetime.now().strftime('%d_%m_%H:%M')}"
         if save_predictions:
             data = {"sentence": sentences, "prediction": predicted_labels}
-            model_name = self.__class__.__name__
-            pd.DataFrame(data=data).to_csv(f"{model_name}_{datetime.now().strftime('%d-%m %H:%M')}.csv",
+            pd.DataFrame(data=data).to_csv(f"{model_name}.csv",
                                            sep="\t",
                                            index=False)
-        print(f"Accuracy: {accuracy_score(predicted_labels, gold_labels)}")
+        if save_model:
+            self.save_model(model_name)
+        print(f"Accuracy on {dataset_part.title()}: {accuracy_score(predicted_labels, gold_labels)}")
+
+    def save_model(self, save_file_path: str = None):
+        if save_file_path is None:
+            save_file_path = f"{self.__class__.__name__}_{datetime.now().strftime('%d_%m_%H:%M')}"
+        save_file_path += ".sav"
+        with open(save_file_path, "wb") as fp:
+            pickle.dump(self, fp)
 
 
 if __name__ == "__main__":
     model = BaseModel()
-    model.evaluate("dev", save_predictions=True)
+    model.evaluate("dev", save_predictions=False, save_model=True)

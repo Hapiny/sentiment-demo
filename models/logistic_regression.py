@@ -1,4 +1,3 @@
-import numpy as np
 from itertools import groupby
 from typing import List, Dict, NoReturn
 
@@ -70,4 +69,4 @@ class LogisticRegressionModel(BaseModel):
 if __name__ == "__main__":
     model = LogisticRegressionModel()
     model.train()
-    model.evaluate("dev", save_predictions=True)
+    model.evaluate("dev", save_predictions=False, save_model=True)

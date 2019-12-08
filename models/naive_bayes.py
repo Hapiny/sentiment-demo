@@ -1,4 +1,3 @@
-import numpy as np
 from typing import List, Dict, NoReturn
 from itertools import groupby
 
@@ -78,4 +77,4 @@ class NaiveBayesModel(BaseModel):
 if __name__ == "__main__":
     model = NaiveBayesModel(_type="bernoulli")
     model.train()
-    model.evaluate("dev", save_predictions=True)
+    model.evaluate("dev", save_predictions=False, save_model=True)
