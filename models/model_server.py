@@ -28,7 +28,11 @@ def run_server(
 def predict():
     sentences = request.json["data"]
     predicted = MODEL.predict(sentences)
-    return jsonify(predicted)
+    response = {
+        "model": MODEL.name,
+        "response": predicted
+    }
+    return jsonify(response)
 
 
 if __name__ == "__main__":
