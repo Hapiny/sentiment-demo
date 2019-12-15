@@ -20,7 +20,7 @@ body {
 }
 
 #custom-input {
-  max-width: 60%;
+  max-width: 75%;
 }
 
 #navbar {
@@ -34,4 +34,8 @@ body {
 
 #table-card {
   margin-top: -1.5%;
+}
+
+#random-btn {
+  margin-left: -10%;
 }

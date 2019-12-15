@@ -54,6 +54,7 @@ class NaiveBayesModel(BaseModel):
             row_idx: [col for _, col in columns]
             for row_idx, columns in groupby(row_col_pairs, key=lambda x: x[0])
         }
+        positive_features, negative_features = [], []
         feature_count_matrix = self.bayes.feature_count_
         feature_count_matrix = feature_count_matrix / feature_count_matrix.sum(axis=0, keepdims=True)
         prediction = self.bayes.predict_proba(transformed_texts)
@@ -65,11 +66,19 @@ class NaiveBayesModel(BaseModel):
                     word = self.tokenizer.id2word[idx]
                     neg_weight = feature_count_matrix[0, idx]
                     pos_weight = feature_count_matrix[1, idx]
+                    if pos_weight > neg_weight:
+                        positive_features.append([word, round(pos_weight, 3)])
+                    else:
+                        negative_features.append([word, round(neg_weight, 3)])
                     features.append([word, neg_weight, pos_weight])
             negative_prob, positive_prob = probs
             predicted.append({
                 "label": ("pos" if negative_prob < positive_prob else "neg"),
-                "features": features
+                "features": features,
+                "pos_prob": round(positive_prob, 2),
+                "neg_prob": round(negative_prob, 2),
+                "pos_features": sorted(positive_features, key=lambda x: x[1], reverse=True)[:5],
+                "neg_features": sorted(negative_features, key=lambda x: x[1], reverse=True)[:5]
             })
         return predicted
 

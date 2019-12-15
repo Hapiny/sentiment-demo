@@ -54,21 +54,43 @@ class BaseModel(object):
                 "features": []
             }
             score = 0
+            num_positive_words, num_negative_words = 0, 0
+            positive_features, negative_features = [], []
             for idx, lemma in enumerate(lemmas):
                 if lemma not in self.word2sentiment:
-                    response["features"].append([tokens[idx], 0])
+                    response["features"].append([lemmas[idx], 0])
                     continue
                 lemma_sentiment = self.word2sentiment[lemma]
                 if lemma_sentiment == "pos":
                     score += 1
-                    response["features"].append([tokens[idx], 1])
+                    num_positive_words += 1
+                    if len(positive_features) < 5:
+                        positive_features.append([lemmas[idx], 1])
+                    response["features"].append([lemmas[idx], 1])
                 else:
                     score -= 1
-                    response["features"].append([tokens[idx], -1])
-            if score >= 0:
+                    num_negative_words += 1
+                    if len(negative_features) < 5:
+                        negative_features.append([lemmas[idx], -1])
+                    response["features"].append([lemmas[idx], -1])
+            
+            response["pos_features"] = positive_features
+            response["neg_features"] = negative_features
+            
+            if score > 0:
                 response["label"] = "pos"
             else:
                 response["label"] = "neg"
+
+            positive_prob, negative_prob = 0.0, 0.0
+            num_words = num_positive_words + num_negative_words
+            if num_words == 0:
+                positive_prob, negative_prob = 0.5, 0.5
+            else:
+                positive_prob = round(num_positive_words / num_words, 2)
+                negative_prob = round(num_negative_words / num_words, 2)
+            response["pos_prob"] = positive_prob
+            response["neg_prob"] = negative_prob
             predicted.append(response)
         return predicted
 

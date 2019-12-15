@@ -8,7 +8,12 @@ import {
 export default class Navbar extends Component {
     render() {
         return (    
-            <MDBNavbar id="navbar" className="heavy-rain-gradient" left={"true"}>
+            <MDBNavbar 
+                id="navbar" 
+                // className="heavy-rain-gradient"
+                className="blue-gradient"
+                left={"true"}
+            >
                 <lottie-player
                     id="logo"
                     src="https://assets3.lottiefiles.com/packages/lf20_DsCKSA/unicorn 2.json"

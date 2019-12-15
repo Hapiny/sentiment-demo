@@ -53,15 +53,24 @@ class LogisticRegressionModel(BaseModel):
         for sample_idx, probs in enumerate(prediction):
             negative_prob, positive_prob = probs
             features = []
+            positive_features, negative_features = [], []
             if sample_idx in row2cols:
                 word_ids = row2cols[sample_idx]
                 for idx in word_ids:
                     word = self.tokenizer.id2word[idx]
                     weight = self.log_reg.coef_[0, idx]
+                    if weight >= 0:
+                        positive_features.append([word, round(weight, 4)])
+                    else:
+                        negative_features.append([word, round(weight, 4)])
                     features.append([word, weight])
             predicted.append({
                 "label": ("pos" if negative_prob < positive_prob else "neg"),
-                "features": features
+                "features": features,
+                "pos_prob": round(positive_prob, 2),
+                "neg_prob": round(negative_prob, 2),
+                "pos_features": sorted(positive_features, key=lambda x: x[1], reverse=True)[:5],
+                "neg_features": sorted(negative_features, key=lambda x: x[1])[:5]
             })
         return predicted
 

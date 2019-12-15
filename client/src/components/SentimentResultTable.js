@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { 
-    MDBCard, MDBCardBody, MDBCardHeader, 
-    MDBInput, MDBBtn, MDBTable, 
+    MDBCard, MDBCardBody, MDBCardHeader, MDBBtn, MDBTable, 
     MDBTableBody, MDBTableHead, MDBContainer
 } from 'mdbreact';
+
 
 export default class TablePage extends Component {
     constructor(props) {
@@ -11,55 +11,41 @@ export default class TablePage extends Component {
         this.state = {
             columns: [
                 {
-                    'label': 'Model Name',
+                    'label': <div className="text-center">
+                                <i className="fa-lg fas fa-database mr-2"/>
+                                <span style={{fontWeight: "bold"}}>Model</span>
+                             </div>,
                     'field': 'model',
                 },
                 {
-                    'label': 'Predicted Label',
+                    'label': <div className="text-center">
+                                <i className="fa-lg fas fa-tag blue-text mr-2"/>
+                                <span style={{fontWeight: "bold"}}>Label</span>
+                             </div>,
                     'field': 'label',
                 },
                 {
-                    'label': [
-                        <i className="fa-lg fas fa-smile-beam green-text mr-2"/>,
-                        'Positive Prob'
-                    ],
+                    'label': <div className="text-center">
+                                <i className="fa-lg fas fa-smile-beam green-text mr-2"/>
+                                <span style={{fontWeight: "bold"}}>Positive Prob</span>
+                             </div>,
                     'field': 'pos_prob'
                 },
                 {
-                    'label': [
-                        <i className="fa-lg fas fa-angry red-text mr-2"/>,
-                        'Negative Prob'
-                    ],
+                    'label': <div className="text-center">
+                                <i className="fa-lg fas fa-angry red-text mr-2"/>
+                                <span style={{fontWeight: "bold"}}>Negative Prob</span>
+                             </div>,
                     'field': 'neg_prob'
                 },
                 {
-                    'label': 'Explanation',
+                    'label': <div className="text-center">
+                                <i className="fa-lg fas fa-magic orange-text mr-2"/>
+                                <span style={{fontWeight: "bold"}}>Explanation</span>
+                             </div>,
                     'field': 'features'
                 }
             ],
-            rows: [
-                {
-                    'model': 'LogisticRegression',
-                    'label': 'Positive',
-                    'pos_prob': 0.73,
-                    'neg_prob': 0.27,
-                    'features': <MDBBtn size="sm">Click</MDBBtn>
-                },
-                {
-                    'model': 'NaiveBayes',
-                    'label': 'Positive',
-                    'pos_prob': 0.61,
-                    'neg_prob': 0.39,
-                    'features': <MDBBtn size="sm">Click</MDBBtn>
-                },
-                {
-                    'model': 'BaseModel',
-                    'label': 'Positive',
-                    'pos_prob': 0.5,
-                    'neg_prob': 0.5,
-                    'features': <MDBBtn size="sm">Click</MDBBtn>
-                }
-            ]
         }
     }
 
@@ -69,36 +55,27 @@ export default class TablePage extends Component {
                 <MDBCard narrow>
                     <MDBCardHeader
                         id="table-card" 
-                        className="view view-cascade gradient-card-header 
-                                blue-gradient d-flex justify-content-between 
-                                align-items-center py-2 mx-4"
+                        style={{
+                            backgroundColor: "#2e2e2e",
+                            borderRadius: "10px"
+                        }}
+                        className="view view-cascade mx-4"
                     >
-                    <div>
-                        <MDBBtn outline rounded size="sm" color="white" className="px-2">
-                            <i className="fa fa-th-large mt-0"></i>
-                        </MDBBtn>
-                        <MDBBtn outline rounded size="sm" color="white" className="px-2">
-                            <i className="fa fa-columns mt-0"></i>
-                        </MDBBtn>
-                    </div>
-                    
-                    <span className="white-text mx-3">Table name</span>
-                    <div>
-                        <MDBBtn outline rounded size="sm" color="white" className="px-2">
-                        <i className="fas fa-pencil-alt mt-0"></i>
-                        </MDBBtn>
-                        <MDBBtn outline rounded size="sm" color="white" className="px-2">
-                        <i className="fas fa-times mt-0"></i>
-                        </MDBBtn>
-                        <MDBBtn outline rounded size="sm" color="white" className="px-2">
-                        <i className="fa fa-info-circle mt-0"></i>
-                        </MDBBtn>
-                    </div>
+                        <h3 className="mx-5 white-text">
+                            {
+                                this.props.sentence
+                            }
+                        </h3>
                     </MDBCardHeader>
                     <MDBCardBody cascade>
                         <MDBTable>
-                            <MDBTableHead columns={this.state.columns} />
-                            <MDBTableBody rows={this.state.rows} />
+                            <MDBTableHead 
+                                columns={this.state.columns} 
+                                
+                            />
+                            <MDBTableBody 
+                                rows={this.props.rows} 
+                            />
                         </MDBTable>
                     </MDBCardBody>
                 </MDBCard>
